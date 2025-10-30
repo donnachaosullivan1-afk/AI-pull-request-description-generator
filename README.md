@@ -1,10 +1,15 @@
-$env:Path += ";C:\Program Files\Git\cmd"
+# Kreoh PR project
+
 
 # Useful git commands
 
 - git status
 - git add FILE1 FILE2
 - git commit -m "Description of my new code changes"
+
+How to create a new branch
+- git branch
+- git checkout -b NEW
 
 # Other useful commands for the project
 - git diff > diff.txt
