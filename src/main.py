@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
+def save_pr_description(pr_text: str):
+    with open("output/PR_DESCRIPTION.md", "w") as f:
+        f.write(pr_text)
 
 def generate_pr_description(client: OpenAI) -> str:
     with open("input/diff.txt", "r") as f:
@@ -26,9 +28,9 @@ def generate_pr_description(client: OpenAI) -> str:
 def main():
     api_key = os.getenv("KEY")
     client = OpenAI(api_key=api_key)
-    story = generate_pr_description(client)
-    print(story)
-
+    pr_description = generate_pr_description(client)
+    print(pr_description)
+    save_pr_description(pr_description)
 
 
 if __name__ == "__main__":

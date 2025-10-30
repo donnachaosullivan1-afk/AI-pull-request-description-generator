@@ -8,6 +8,7 @@ $env:Path += ";C:\Program Files\Git\cmd"
 
 # Other useful commands for the project
 - git diff > diff.txt
+- git stash
 
 # Task 1
 - There is a directory called `input` that contains a `diff.txt` file.
