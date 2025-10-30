@@ -8,3 +8,5 @@ dependencies = [
     "dotenv>=0.9.9",
     "openai>=2.6.1",
 ]
+[project.scripts]
+pr-description = "src.main:main"
