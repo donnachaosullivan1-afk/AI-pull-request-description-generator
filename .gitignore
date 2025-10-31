@@ -1,3 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Test / coverage
+.pytest_cache/
+.coverage*
+coverage.xml
+.tox/
+
+# Type checkers / linters
+.mypy_cache/
+.ruff_cache/
+pyrightconfig.json
+
+# Environment / secrets
+.env
+.env.*
+.python-version
+
+# Tooling
+.uv/
+
+# Editors / IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
 # Environment files
 .env
 .env.*
