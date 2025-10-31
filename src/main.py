@@ -1,70 +1,72 @@
 #!/usr/bin/env python3
+
 import argparse
+import subprocess
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def generate_pr_description(diff: str) -> str:
-    api_key = os.getenv("KEY")
-    client = OpenAI(api_key=api_key)
+# Initialize OpenAI client
+api_key = os.getenv("KEY")
+client = OpenAI(api_key=api_key)
 
-    prompt = f"""
-You are a helpful assistant that generates PR descriptions.
-Here is the diff of what changed:
+def get_diff(diff_path):
+    """Return the diff text. If no diff file is provided, generate one using git diff."""
+    
+    # If user provided a diff file and it exists, use it.
+    if diff_path and os.path.exists(diff_path):
+        with open(diff_path, "r") as f:
+            return f.read()
 
-{diff}
+    # Otherwise, auto-generate diff from git
+    print("No diff file provided. Auto-generating diff from Git...")
+    diff = subprocess.check_output(["git", "diff"]).decode("utf-8")
 
-Write a clear and helpful pull request description that explains what changed and why.
-"""
+    # Ensure input/ directory exists
+    os.makedirs("input", exist_ok=True)
 
-    response = client.responses.create(
+    # Save auto-generated diff
+    auto_diff_path = "input/diff.txt"
+    with open(auto_diff_path, "w") as f:
+        f.write(diff)
+
+    print(f"Generated diff saved to {auto_diff_path}")
+    return diff
+
+
+def generate_pr_description(diff):
+    """Send diff to OpenAI model to generate PR description."""
+    print("Generating PR description...")
+
+    response = client.chat.completions.create(
         model="gpt-5",
-        input=prompt
+        messages=[
+            {"role": "system", "content": "You are an AI that writes high quality PR descriptions."},
+            {"role": "user", "content": diff}
+        ]
     )
 
-    return response.output_text
+    return response.choices[0].message.content.strip()
 
 
-def _read_text_with_fallbacks(path: str) -> str:
-    encodings_to_try = [
-        "utf-8",
-        "utf-8-sig",   # handles UTF-8 BOM
-        "utf-16",      # auto-detects LE/BE via BOM
-        "cp1252",      # common on Windows
-        "latin-1",     # last-resort, never fails
-    ]
-    last_error = None
-    for enc in encodings_to_try:
-        try:
-            with open(path, "r", encoding=enc) as f:
-                return f.read()
-        except UnicodeDecodeError as e:
-            last_error = e
-            continue
-    if last_error is not None:
-        raise last_error
-    raise UnicodeDecodeError("unknown", b"", 0, 1, "Unable to decode file with known fallbacks")
-
-
-def save_pr_description(text: str, output_path: str):
+def save_pr_description(pr_text, output_path):
+    """Save PR description to output file."""
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(text)
+    with open(output_path, "w") as f:
+        f.write(pr_text)
     print(f"✅ PR description saved to {output_path}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate PR descriptions from a diff file.")
-    parser.add_argument("--diff", required=True, help="Path to diff.txt")
-    parser.add_argument("--output", required=True, help="Where to save PR_DESCRIPTION.md")
+    parser = argparse.ArgumentParser(description="Generate a PR description from code changes.")
+    parser.add_argument("--diff", type=str, help="Path to diff file (optional). If omitted, git diff is used.")
+    parser.add_argument("--output", type=str, required=True, help="Where to save PR description.")
     args = parser.parse_args()
 
-    diff_content = _read_text_with_fallbacks(args.diff)
-
-    print("Generating PR description...")
-    pr_description = generate_pr_description(diff_content)
+    diff = get_diff(args.diff)
+    pr_description = generate_pr_description(diff)
     save_pr_description(pr_description, args.output)
 
 
