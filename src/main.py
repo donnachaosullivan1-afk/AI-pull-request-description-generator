@@ -63,6 +63,7 @@ def main():
 
     diff_content = _read_text_with_fallbacks(args.diff)
 
+    print("Generating PR description...")
     pr_description = generate_pr_description(diff_content)
     save_pr_description(pr_description, args.output)
 

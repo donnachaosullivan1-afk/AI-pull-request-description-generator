@@ -1,26 +1,25 @@
-Title: docs(README): add ìUseful git commandsî quick reference
+Title: README: add quick-start Git commands for contributors
 
-Overview
-This PR updates the README to improve onboarding by adding a quick-reference section for common Git commands. It complements the existing PATH configuration note and provides a minimal workflow for staging and committing changes.
+Summary:
+This PR expands the README with a concise ‚ÄúUseful git commands‚Äù section to help new contributors get started. It complements the existing PowerShell PATH instruction for Git by adding common commands used in a basic workflow.
 
-What changed
-- Added a new section: ìUseful git commandsî
+What changed:
+- Added a ‚ÄúUseful git commands‚Äù section to README.md
+- Included examples for:
   - git status
   - git add FILE1 FILE2
   - git commit -m "Description of my new code changes"
-- Added spacing after the PATH setup line to improve readability.
-- No code, build, or dependency changes.
+- Preserved the existing PowerShell PATH update for Git and added spacing for readability
 
-Why
-- New contributors often need a quick reminder of the basic Git workflow right in the project README.
-- Reduces friction for first-time contributors and standardizes commit practices.
+Why:
+- Improve onboarding by providing an immediate, copy-pastable reference for everyday Git tasks
+- Reduce friction for contributors who may be new to Git
+- Make the README more self-contained for quick setup and first commits
 
-Impact
-- Documentation-only change; no runtime impact.
+Impact:
+- Documentation-only; no code or runtime changes
 
-Verification
-- Previewed README to confirm proper Markdown rendering and bullet formatting.
-- Confirmed the existing PATH instruction remains unchanged.
-
-Notes
-- The file currently has no trailing newline; can be addressed in a follow-up if desired.
+Follow-ups (optional):
+- Add commands for git push, git pull, and branching
+- Include macOS/Linux equivalents for PATH setup
+- Link to a CONTRIBUTING.md with a fuller workflow and commit message guidelines
